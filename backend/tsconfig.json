@@ -12,12 +12,12 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": false,
-     "noImplicitAny": false, 
-    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "skipLibCheck": false,  // Changed from true
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node"]  ,
-       "lib": ["esnext"],   
+    "types": ["node"],
+    "lib": ["esnext", "dom"]  // Added "dom"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
