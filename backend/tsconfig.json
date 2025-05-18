@@ -1,3 +1,28 @@
+// {
+//   "compilerOptions": {
+//     "target": "es2016",
+//     "module": "commonjs",
+//     "rootDir": "./src",
+//     "outDir": "./dist",
+//     "moduleResolution": "node",
+//     // "baseUrl": "./src",
+//     // "paths": {
+//     //   "@/*": ["*"]
+//     // },
+//     "esModuleInterop": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "strict": false,
+//      "noImplicitAny": false, 
+//     "skipLibCheck": true,
+//     "resolveJsonModule": true,
+//     "allowSyntheticDefaultImports": true
+//   },
+//   "typeRoots": ["node_modules/@types"],
+//     "types": ["node"],
+//   "include": ["src"],
+//   "exclude": ["node_modules", "dist"]
+// }
+
 {
   "compilerOptions": {
     "target": "es2016",
@@ -5,20 +30,22 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "moduleResolution": "node",
-    // "baseUrl": "./src",
-    // "paths": {
-    //   "@/*": ["*"]
-    // },
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "strict": false,
-     "noImplicitAny": false, 
+    "noImplicitAny": false,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
-  },
-  "typeRoots": ["node_modules/@types"],
+    "allowSyntheticDefaultImports": true,
+    "noEmitOnError": false,
     "types": ["node"],
+    "typeRoots": ["node_modules/@types"],
+    "allowJs": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "suppressImplicitAnyIndexErrors": true
+  },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }
+
