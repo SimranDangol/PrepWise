@@ -155,7 +155,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Dell\\OneDrive\\Desktop\\P\\backend\\src\\generated\\prisma",
+      "value": "C:\\Users\\Dell\\OneDrive\\Desktop\\Prepwise\\backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -169,7 +169,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Dell\\OneDrive\\Desktop\\P\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Dell\\OneDrive\\Desktop\\Prepwise\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -183,6 +183,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
