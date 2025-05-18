@@ -19,13 +19,9 @@ const generateAccessToken = (userId: string): string => {
   // Type-safe expiresIn value
   const expiresIn = (process.env.JWT_EXPIRES_IN as string) || "1h";
 
-  return jwt.sign(
-    { id: userId },
-    process.env.JWT_SECRET,
-    {
-      expiresIn,
-    } as jwt.SignOptions // Explicitly type the options
-  );
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn,
+  });
 };
 
 const generateRefreshToken = (userId: string): string => {
@@ -42,7 +38,7 @@ const generateRefreshToken = (userId: string): string => {
 
   return jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, {
     expiresIn: refreshExpiresIn,
-  } as jwt.SignOptions);
+  });
 };
 
 // REGISTER
