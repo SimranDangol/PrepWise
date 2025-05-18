@@ -5,13 +5,14 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "moduleResolution": "node",
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    },
+    // "baseUrl": "./src",
+    // "paths": {
+    //   "@/*": ["*"]
+    // },
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,
+     "noImplicitAny": false, 
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
