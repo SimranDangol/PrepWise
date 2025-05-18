@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                     String      @id @default(uuid())
+  fullName               String
+  email                  String      @unique
+  password               String
+  image                  String?
+  resume                 String?
+  isVerified             Boolean     @default(false)
+  verificationCode       String?
+  verificationExpiry     DateTime?
+  lastVerificationSentAt DateTime?
+  passwordResetToken     String?
+  passwordResetExpiry    DateTime?
+  refreshToken           String?
+  interviews             Interview[]
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+}
+
+model Interview {
+  id         String   @id @default(uuid())
+  role       String
+  type       String
+  level      String
+  techstack  String[]
+  questions  String[]
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  finalized  Boolean  @default(false)
+  coverImage String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: your-backend-service
+    env: node
+    buildCommand: npm install && npm run prisma:generate && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # This needs to be set manually in Render dashboard for security
+      - key: JWT_SECRET
+        sync: false
+      # Add other environment variables your app needs
+    plan: free # or specify another plan
