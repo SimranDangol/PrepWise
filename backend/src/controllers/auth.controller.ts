@@ -45,8 +45,19 @@ const generateRefreshToken = (userId: string): string => {
 
 // REGISTER
 
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
+
 interface MulterFiles {
-  [fieldname: string]: Express.Multer.File[];
+  [fieldname: string]: MulterFile[];
 }
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
@@ -58,14 +69,16 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   if (existingUser) {
     throw new ApiError(409, "User with this email already exists");
   }
-
-  // Use the type assertion
+  
+  // Use type assertion with our custom interface
   const files = req.files as unknown as MulterFiles;
-
+  
   const imageFile = files?.image?.[0];
   const resumeFile = files?.resume?.[0];
   let imageUrl: string | null = null;
   let resumeUrl: string | null = null;
+  
+  // Rest of the function remains the same
   if (imageFile) {
     const uploadedImage = await uploadToCloudinary(
       imageFile.path,
@@ -73,6 +86,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     );
     imageUrl = uploadedImage.secure_url;
   }
+  
   if (resumeFile) {
     const uploadedResume = await uploadToCloudinary(
       resumeFile.path,
@@ -80,6 +94,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     );
     resumeUrl = uploadedResume.secure_url;
   }
+  
   const hashedPassword = await bcrypt.hash(password, 10);
   const verificationCode = Math.floor(
     100000 + Math.random() * 900000
@@ -87,6 +102,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const hashedCode = await bcrypt.hash(verificationCode, 10);
   const verificationExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
   const lastVerificationSentAt = new Date();
+  
   const newUser = await prisma.user.create({
     data: {
       fullName,
@@ -99,7 +115,9 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
       lastVerificationSentAt,
     },
   });
+  
   await sendVerificationEmail(email, verificationCode);
+  
   return res.status(201).json(
     new ApiResponse(
       201,

@@ -19,13 +19,15 @@
 //     cb(null, true);
 //   },
 // });
+
 import multer from "multer";
-import { Request, Response } from "express";
+import { Request } from "express";
 import path from "path";
 
+// Use 'any' for file types to avoid errors
 const storage = multer.diskStorage({
   destination: "uploads/",
-  filename: (req: Request, file: Express.Multer.File, cb) => {
+  filename: (req: Request, file: any, cb) => {
     const uniqueName = `${Date.now()}-${file.originalname}`;
     cb(null, uniqueName);
   },
@@ -33,7 +35,7 @@ const storage = multer.diskStorage({
 
 export const upload = multer({
   storage,
-  fileFilter: (req: Request, file: Express.Multer.File, cb) => {
+  fileFilter: (req: Request, file: any, cb) => {
     const ext = path.extname(file.originalname);
     if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png" && ext !== ".pdf") {
       return cb(new Error("Only images and PDF files are allowed"));
