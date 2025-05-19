@@ -6,12 +6,12 @@ import { ApiError } from "../utils/apiError";
 import { generateText } from "ai";
 
 // GET
-export const getStatus = asyncHandler(async (req: Request, res: Response) => {
-  return res.status(200).json({
+export const getStatus = (req: Request, res: Response) => {
+  res.status(200).json({
     success: true,
     data: "Thank you!",
   });
-});
+};
 
 const genAI = google("gemini-2.0-flash-001");
 
