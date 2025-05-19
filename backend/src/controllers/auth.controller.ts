@@ -8,7 +8,7 @@ import { ApiResponse } from "../utils/apiResponse";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { uploadToCloudinary } from "../middlewares/upload";
-import { MulterFiles } from "../types/multer";
+import { MulterFiles } from "../types/multerTypes";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { fullName, email, password } = req.body;
