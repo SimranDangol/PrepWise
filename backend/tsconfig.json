@@ -16,9 +16,9 @@
     "skipLibCheck": false,  // Changed from true
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node"],
+    "types": ["node", "multer"],
     "lib": ["esnext", "dom"],
-    "typeRoots": ["./node_modules/@types", "./types"]
+    "typeRoots": ["./node_modules/@types", "src/types"]
   },
   "include": ["src", "src/types"],
   "exclude": ["node_modules", "dist"]
