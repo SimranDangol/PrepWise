@@ -17,6 +17,10 @@ app.use(
 app.use(cookieParser());
 
 //routes
+app.get("/", (req, res) => {
+  res.send("PrepWise backend is live!");
+});
+
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/vapi", vapiRouter);
 
