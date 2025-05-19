@@ -8,8 +8,97 @@ import { ApiResponse } from "../utils/apiResponse";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { uploadToCloudinary } from "../middlewares/upload";
-import { Multer } from "multer";
-import multer from "multer";
+
+
+
+
+export interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+}
+
+
+
+// Multer file type definition using Express.Multer.File
+interface MulterFiles {
+  [fieldname: string]: Express.Multer.File[];
+}
+
+export const register = asyncHandler(async (req: Request, res: Response) => {
+  const { fullName, email, password } = req.body;
+
+  if (!fullName || !email || !password) {
+    throw new ApiError(400, "Full name, email, and password are required");
+  }
+
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    throw new ApiError(409, "User with this email already exists");
+  }
+
+  // Cast req.files to MulterFiles interface
+  const files = req.files as MulterFiles;
+
+  const imageFile = files?.image?.[0];
+  const resumeFile = files?.resume?.[0];
+
+  let imageUrl: string | null = null;
+  let resumeUrl: string | null = null;
+
+  if (imageFile) {
+    const uploadedImage = await uploadToCloudinary(imageFile.path, "user-images");
+    imageUrl = uploadedImage.secure_url;
+  }
+
+  if (resumeFile) {
+    const uploadedResume = await uploadToCloudinary(resumeFile.path, "user-resumes");
+    resumeUrl = uploadedResume.secure_url;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashedCode = await bcrypt.hash(verificationCode, 10);
+  const verificationExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  const lastVerificationSentAt = new Date();
+
+  const newUser = await prisma.user.create({
+    data: {
+      fullName,
+      email,
+      password: hashedPassword,
+      image: imageUrl,
+      resume: resumeUrl,
+      verificationCode: hashedCode,
+      verificationExpiry,
+      lastVerificationSentAt,
+    },
+  });
+
+  await sendVerificationEmail(email, verificationCode);
+
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        id: newUser.id,
+        email: newUser.email,
+        fullName: newUser.fullName,
+        image: newUser.image,
+        resume: newUser.resume,
+        isVerified: newUser.isVerified,
+      },
+      "User registered successfully. Verification email sent."
+    )
+  );
+});
+
 
 //Access Token
 const generateAccessToken = (userId: string): string => {
@@ -44,99 +133,6 @@ const generateRefreshToken = (userId: string): string => {
 };
 
 // REGISTER
-
-export interface MulterFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  destination: string;
-  filename: string;
-  path: string;
-  size: number;
-}
-
-interface MulterFiles {
-  [fieldname: string]: MulterFile[];
-}
-
-export const register = asyncHandler(async (req: Request, res: Response) => {
-  const { fullName, email, password } = req.body;
-  if (!fullName || !email || !password) {
-    throw new ApiError(400, "Full name, email, and password are required");
-  }
-  const existingUser = await prisma.user.findUnique({ where: { email } });
-  if (existingUser) {
-    throw new ApiError(409, "User with this email already exists");
-  }
-  
-  // Use type assertion with our custom interface
-interface MulterFiles {
-  [fieldname: string]: Express.Multer.File[];
-}
-const files = req.files as MulterFiles;
-  
-  const imageFile = files?.image?.[0];
-  const resumeFile = files?.resume?.[0];
-  let imageUrl: string | null = null;
-  let resumeUrl: string | null = null;
-  
-  // Rest of the function remains the same
-  if (imageFile) {
-    const uploadedImage = await uploadToCloudinary(
-      imageFile.path,
-      "user-images"
-    );
-    imageUrl = uploadedImage.secure_url;
-  }
-  
-  if (resumeFile) {
-    const uploadedResume = await uploadToCloudinary(
-      resumeFile.path,
-      "user-resumes"
-    );
-    resumeUrl = uploadedResume.secure_url;
-  }
-  
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const verificationCode = Math.floor(
-    100000 + Math.random() * 900000
-  ).toString();
-  const hashedCode = await bcrypt.hash(verificationCode, 10);
-  const verificationExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-  const lastVerificationSentAt = new Date();
-  
-  const newUser = await prisma.user.create({
-    data: {
-      fullName,
-      email,
-      password: hashedPassword,
-      image: imageUrl,
-      resume: resumeUrl,
-      verificationCode: hashedCode,
-      verificationExpiry,
-      lastVerificationSentAt,
-    },
-  });
-  
-  await sendVerificationEmail(email, verificationCode);
-  
-  return res.status(201).json(
-    new ApiResponse(
-      201,
-      {
-        id: newUser.id,
-        email: newUser.email,
-        fullName: newUser.fullName,
-        image: newUser.image,
-        resume: newUser.resume,
-        isVerified: newUser.isVerified,
-      },
-      "User registered successfully. Verification email sent."
-    )
-  );
-});
-
 // export const register = asyncHandler(async (req: Request, res: Response) => {
 //   const { fullName, email, password } = req.body;
 
