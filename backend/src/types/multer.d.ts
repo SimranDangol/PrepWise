@@ -1,15 +1,17 @@
-// Remove the Multer import and use direct types
-import "multer"; // This ensures the types are loaded
+// src/types/multer.d.ts
+import "multer"; // This ensures Multer types are loaded
 
 declare global {
   namespace Express {
+    // This merges with the existing Express types
     interface Request {
-      file?: Express.Multer.File;
+      file?: Multer.File;
       files?:
         | {
-            [fieldname: string]: Express.Multer.File[];
+            [fieldname: string]: Multer.File[];
           }
-        | Express.Multer.File[];
+        | Multer.File[];
     }
   }
 }
+
