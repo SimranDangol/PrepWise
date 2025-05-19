@@ -30,6 +30,12 @@ const InterviewCard = ({
     setCoverImage(getRandomInterviewCover());
   }, []);
 
+  useEffect(() => {
+  // You might use userId for analytics, filtering, etc.
+  console.log("InterviewCard rendered for userId:", userId);
+}, [userId]);
+
+
   return (
     <div className="relative w-full h-full rounded-xl border border-[#484D4F] bg-gradient-to-br from-[#1A1C20] to-[#08090D] p-6 shadow-md hover:shadow-lg transition">
       {/* Badge top-right absolute */}

@@ -9,6 +9,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import type { AxiosError } from "axios";
 
 const schema = z.object({
   newPassword: z
@@ -46,8 +47,9 @@ export default function ResetPasswordPage() {
       });
       toast.success("Password reset successful");
       router.push("/login");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Reset failed");
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      toast.error(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

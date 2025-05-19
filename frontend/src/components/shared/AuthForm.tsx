@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import axiosInstance from "@/lib/axiosInstance";
 import { setUser } from "@/redux/store/userSlice";
 import { useDispatch } from "react-redux";
+import { AxiosError } from "axios";
 
 type FormType = "login" | "register";
 
@@ -83,50 +84,53 @@ const AuthForm = ({ type }: { type: FormType }) => {
       setTimeout(() => {
         router.push("/");
       }, 1000);
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Login failed";
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      const message = err.response?.data?.message || "Login failed";
       toast.error(message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSignup = async (data: z.infer<typeof formSchema>) => {
-    try {
-      setIsLoading(true);
+ const handleSignup = async (data: z.infer<typeof formSchema>) => {
+  try {
+    setIsLoading(true);
 
-      if (!uploadedProfile) {
-        toast.error("Profile picture is required");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("fullName", data.fullName || "");
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formData.append("image", uploadedProfile);
-      if (uploadedResume) {
-        formData.append("resume", uploadedResume);
-      }
-
-      const response = await axiosInstance.post("/auth/register", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      toast.success("Registration successful");
-      sessionStorage.setItem("userEmail", data.email);
-      setTimeout(() => {
-        router.push("/verify");
-      }, 1000);
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Registration failed";
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
+    if (!uploadedProfile) {
+      toast.error("Profile picture is required");
+      return;
     }
-  };
+
+    const formData = new FormData();
+    formData.append("fullName", data.fullName || "");
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("image", uploadedProfile);
+    if (uploadedResume) {
+      formData.append("resume", uploadedResume);
+    }
+
+    // Remove the unused response variable
+    await axiosInstance.post("/auth/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    toast.success("Registration successful");
+    sessionStorage.setItem("userEmail", data.email);
+    setTimeout(() => {
+      router.push("/verify");
+    }, 1000);
+  } catch (error) {
+    const err = error as AxiosError<{ message: string }>;
+    const message = err.response?.data?.message || "Registration failed";
+    toast.error(message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const UploadField = ({
     label,
@@ -161,7 +165,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
             onChange={(e) => {
               const file = e.target.files?.[0] || null;
               onChange(file);
-              form.setValue(name as any, file);
+              form.setValue(name as keyof z.infer<typeof formSchema>, file);
             }}
           />
         </label>
