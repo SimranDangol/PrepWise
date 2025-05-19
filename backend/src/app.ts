@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // );
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://prepwise-fu6vs5tye-simrandangols-projects.vercel.app"],
+    origin: ["http://localhost:3000", "https://prepwise-mu.vercel.app"],
     credentials: true,
   })
 );
