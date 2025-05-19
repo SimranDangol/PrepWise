@@ -8,27 +8,7 @@ import { ApiResponse } from "../utils/apiResponse";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { uploadToCloudinary } from "../middlewares/upload";
-
-
-
-
-export interface MulterFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  destination: string;
-  filename: string;
-  path: string;
-  size: number;
-}
-
-
-
-// Multer file type definition using Express.Multer.File
-interface MulterFiles {
-  [fieldname: string]: Express.Multer.File[];
-}
+import { MulterFiles } from "../types/multer";
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { fullName, email, password } = req.body;
@@ -42,28 +22,37 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(409, "User with this email already exists");
   }
 
-  // Cast req.files to MulterFiles interface
-  const files = req.files as MulterFiles;
-
-  const imageFile = files?.image?.[0];
-  const resumeFile = files?.resume?.[0];
+  const files = req.files;
+  let imageFile, resumeFile;
+  if (files && !Array.isArray(files)) {
+    imageFile = files.image?.[0];
+    resumeFile = files.resume?.[0];
+  }
 
   let imageUrl: string | null = null;
   let resumeUrl: string | null = null;
 
   if (imageFile) {
-    const uploadedImage = await uploadToCloudinary(imageFile.path, "user-images");
+    const uploadedImage = await uploadToCloudinary(
+      imageFile.path,
+      "user-images"
+    );
     imageUrl = uploadedImage.secure_url;
   }
 
   if (resumeFile) {
-    const uploadedResume = await uploadToCloudinary(resumeFile.path, "user-resumes");
+    const uploadedResume = await uploadToCloudinary(
+      resumeFile.path,
+      "user-resumes"
+    );
     resumeUrl = uploadedResume.secure_url;
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const verificationCode = Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
   const hashedCode = await bcrypt.hash(verificationCode, 10);
   const verificationExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
   const lastVerificationSentAt = new Date();
@@ -98,7 +87,6 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     )
   );
 });
-
 
 //Access Token
 const generateAccessToken = (userId: string): string => {
