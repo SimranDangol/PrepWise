@@ -20,6 +20,6 @@
     "lib": ["esnext", "dom"],
     "typeRoots": ["./node_modules/@types", "./types"]
   },
-  "include": ["src"],
+  "include": ["src", "src/types"],
   "exclude": ["node_modules", "dist"]
 }
