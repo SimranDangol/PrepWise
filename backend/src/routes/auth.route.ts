@@ -29,7 +29,7 @@ router.route("/login").post(login);
 router.route("/refresh").post(refreshAccessToken);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password").post(resetPassword);
-router.route("/current-user").post(authenticateUser, getCurrentUser);
+router.route("/current-user").get(authenticateUser, getCurrentUser);
 router.route("/logout").post(authenticateUser, logout);
 
 export default router;

@@ -3,7 +3,8 @@ import { Router } from "express";
 
 const router = Router();
 
-router.route("/generate").get(generateInterview);
-router.route("/status").get(getStatus);
+router.route("/generate")
+  .post(generateInterview)  
+  .get(getStatus);          
 
 export default router;
