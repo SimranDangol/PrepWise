@@ -23,7 +23,7 @@
 import multer from "multer";
 import { Request } from "express";
 import path from "path";
-import { MulterFile } from "../controllers/auth.controller";
+
 
 const storage = multer.diskStorage({
   destination: "uploads/",

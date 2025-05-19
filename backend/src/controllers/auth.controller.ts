@@ -71,7 +71,10 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   }
   
   // Use type assertion with our custom interface
-  const files = req.files as unknown as MulterFiles;
+interface MulterFiles {
+  [fieldname: string]: Express.Multer.File[];
+}
+const files = req.files as MulterFiles;
   
   const imageFile = files?.image?.[0];
   const resumeFile = files?.resume?.[0];
