@@ -23,8 +23,8 @@
 import multer from "multer";
 import { Request } from "express";
 import path from "path";
+import { MulterFile } from "../controllers/auth.controller";
 
-// Use 'any' for file types to avoid errors
 const storage = multer.diskStorage({
   destination: "uploads/",
   filename: (req: Request, file: any, cb) => {

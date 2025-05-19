@@ -45,7 +45,7 @@ const generateRefreshToken = (userId: string): string => {
 
 // REGISTER
 
-interface MulterFile {
+export interface MulterFile {
   fieldname: string;
   originalname: string;
   encoding: string;
