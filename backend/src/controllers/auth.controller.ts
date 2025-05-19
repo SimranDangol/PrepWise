@@ -8,6 +8,7 @@ import { ApiResponse } from "../utils/apiResponse";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { uploadToCloudinary } from "../middlewares/upload";
+import { File as MulterFile } from "multer";
 
 //Access Token
 const generateAccessToken = (userId: string): string => {
@@ -55,7 +56,10 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(409, "User with this email already exists");
   }
 
-  const files = req.files as unknown as {
+  // const files = req.files as unknown as {
+  //   [fieldname: string]: Express.Multer.File[];
+  // };
+  const files = req.files as {
     [fieldname: string]: Express.Multer.File[];
   };
 

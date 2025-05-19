@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
- "scripts": {
-  "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-  "build": "npm install && npx prisma generate && tsc",
-  "start": "node dist/index.js",
-  "prisma:generate": "npx prisma generate",
-  "prisma:migrate": "npx prisma migrate dev"
-},
-
-
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "npm install && npx prisma generate && tsc",
+    "start": "node dist/index.js",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,6 +17,7 @@
     "@ai-sdk/google": "^1.2.18",
     "@google/generative-ai": "^0.24.1",
     "@prisma/client": "^6.8.2",
+    "@types/node": "^22.15.18",
     "ai": "^4.3.16",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.6.1",
@@ -31,8 +30,7 @@
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^7.0.3",
     "resend": "^4.5.1",
-    "speakeasy": "^2.0.0",
-    "@types/node": "^22.15.18"
+    "speakeasy": "^2.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
