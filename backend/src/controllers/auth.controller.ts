@@ -8,7 +8,7 @@ import { ApiResponse } from "../utils/apiResponse";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import { uploadToCloudinary } from "../middlewares/upload";
-import { File as MulterFile } from "multer";
+import { Multer } from 'multer';
 
 //Access Token
 const generateAccessToken = (userId: string): string => {
@@ -59,9 +59,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   // const files = req.files as unknown as {
   //   [fieldname: string]: Express.Multer.File[];
   // };
-  const files = req.files as {
-    [fieldname: string]: Express.Multer.File[];
-  };
+
+ const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
   const imageFile = files?.image?.[0];
   const resumeFile = files?.resume?.[0];
